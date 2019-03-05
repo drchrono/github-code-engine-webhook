@@ -51,7 +51,7 @@ def upload_alooma_code_engine(file_path):
         if module == "__init__.py":
             continue
         with open(os.path.join(file_path, module), "r") as f:
-            contents[re.sub("/", ".", module)[:3]] = f.read()
+            contents[re.sub("/", ".", module)[-:3]] = f.read()
     return ALOOMA_API.set_code_engine_code(contents)
 
 
