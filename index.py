@@ -38,10 +38,9 @@ REPOS_JSON_PATH = os.environ['REPOS_JSON_PATH']
 
 FILE_PATH = os.environ['CODE_ENGINE_FILE_PATH']
 ALOOMA_DEPLOYMENT = os.environ['ALOOMA_DEPLOYMENT']
-ALOOMA_USER = os.environ['ALOOMA_USER']
-ALOOMA_PASSWORD = os.environ['ALOOMA_PASSWORD']
+API_KEY = os.environ['ALOOMA_API_KEY']
 
-ALOOMA_API = alooma.Client(username=ALOOMA_USER, password=ALOOMA_PASSWORD, account_name=ALOOMA_DEPLOYMENT)
+ALOOMA_API = alooma.Client(api_key=API_KEY, account_name=ALOOMA_DEPLOYMENT)
 
 def upload_alooma_code_engine(file_path):
     """ Uploads Code Engine Script to Alooma """
