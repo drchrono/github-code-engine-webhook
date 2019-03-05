@@ -68,7 +68,7 @@ def index():
 
         repos = json.loads(io.open(REPOS_JSON_PATH, 'r').read())
 
-        payload = json.loads(request.data)
+        payload = request.get_json()
         repo_meta = {
             'name': payload['repository']['name'],
             'owner': payload['repository']['owner']['name'],
@@ -91,10 +91,9 @@ def index():
             if key:
                 signature = request.headers.get('X-Hub-Signature').split(
                     '=')[1]
-                if type(key) == unicode:
-                    key = key.encode()
+                key = bytes(key, "utf-8")
                 mac = hmac.new(key, msg=request.data, digestmod=sha1)
-                if not compare_digest(mac.hexdigest(), signature):
+                if not hmac.compare_digest(mac.hexdigest(), signature):
                     abort(403)
 
         if repo.get('action', None):
@@ -104,29 +103,6 @@ def index():
         upload_alooma_code_engine(FILE_PATH)
         return 'OK'
 
-# Check if python version is less than 2.7.7
-if sys.version_info < (2, 7, 7):
-    # http://blog.turret.io/hmac-in-go-python-ruby-php-and-nodejs/
-    def compare_digest(a, b):
-        """
-        ** From Django source **
-
-        Run a constant time comparison against two strings
-
-        Returns true if a and b are equal.
-
-        a and b must both be the same length, or False is
-        returned immediately
-        """
-        if len(a) != len(b):
-            return False
-
-        result = 0
-        for ch_a, ch_b in zip(a, b):
-            result |= ord(ch_a) ^ ord(ch_b)
-        return result == 0
-else:
-    compare_digest = hmac.compare_digest
 
 if __name__ == "__main__":
     try:
