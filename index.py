@@ -50,7 +50,7 @@ def upload_alooma_code_engine(file_path):
     # Read Contents
     contents = file.read()
 
-    return ALOOMA_API.set_transform(contents)
+    return ALOOMA_API.set_code_engine_code(contents)
 
 
 @app.route("/", methods=['GET', 'POST'])
