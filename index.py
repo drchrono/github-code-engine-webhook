@@ -42,7 +42,7 @@ ALOOMA_API = alooma.Client(api_key=API_KEY)
 def upload_alooma_code_engine(file_path):
     """ Uploads Code Engine Script to Alooma """
     contents = {}
-    for module in [os.path.listdir(file_path)]:
+    for module in os.listdir(file_path):
         print(module, file=sys.stderr)
         if not os.path.isfile(os.path.join(file_path, module)):
             continue
