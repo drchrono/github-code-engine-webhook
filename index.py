@@ -32,24 +32,24 @@ if os.environ.get('USE_PROXYFIX', None) == 'true':
 app = Flask(__name__)
 app.debug = os.environ.get('DEBUG') == 'true'
 
-# The repos.json file should be readable by the user running the Flask app,
-# and the absolute path should be given by this environment variable.
 REPOS_JSON_PATH = os.environ['REPOS_JSON_PATH']
-
 FILE_PATH = os.environ['CODE_ENGINE_FILE_PATH']
-ALOOMA_DEPLOYMENT = os.environ['ALOOMA_DEPLOYMENT']
 API_KEY = os.environ['ALOOMA_API_KEY']
 
-ALOOMA_API = alooma.Client(api_key=API_KEY, account_name=ALOOMA_DEPLOYMENT)
+ALOOMA_API = alooma.Client(api_key=API_KEY)
+
 
 def upload_alooma_code_engine(file_path):
     """ Uploads Code Engine Script to Alooma """
     contents = {}
-    for module in os.path.listdir(file_path):
+    for module in [os.path.listdir(file_path)]:
+        print(module, file=sys.stderr)
+        if not os.path.isfile(os.path.join(file_path, module)):
+            continue
         if not module.endswith(".py"):
             continue
-        with open(os.path.join(file_path, module), "rU") as f:
-            contents[re.sub("/", ".", module)] = f.read()
+        with open(os.path.join(file_path, module), "r") as f:
+            contents[re.sub("/", ".", module)[:3]] = f.read()
     return ALOOMA_API.set_code_engine_code(contents)
 
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     try:
         port_number = int(sys.argv[1])
     except:
-        port_number = 80
+        port_number = 8080
     if os.environ.get('USE_PROXYFIX', None) == 'true':
         app.wsgi_app = ProxyFix(app.wsgi_app)
     app.run(host='0.0.0.0', port=port_number)
