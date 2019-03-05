@@ -44,12 +44,12 @@ ALOOMA_API = alooma.Client(api_key=API_KEY, account_name=ALOOMA_DEPLOYMENT)
 
 def upload_alooma_code_engine(file_path):
     """ Uploads Code Engine Script to Alooma """
-
-    # Get Desired File
-    file = open(file_path, 'r')
-    # Read Contents
-    contents = file.read()
-
+    contents = {}
+    for module in os.path.listdir(file_path):
+        if not module.endswith(".py"):
+            continue
+        with open(os.path.join(file_path, module), "rU") as f:
+            contents[re.sub("/", ".", module)] = f.read()
     return ALOOMA_API.set_code_engine_code(contents)
 
 
