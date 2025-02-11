@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: github-code-engine-webhook
+  description: 'This repository allows users to setup a webhook in Github which ties
+    one of their repository files to the code engine transform functionality '
+  annotations:
+    business-unit: EverHealth
+    github.com/project-slug: drchrono/github-code-engine-webhook
+    product: DRC
+spec:
+  type: service
+  lifecycle: production
+  owner: EverHealth
+  implementation:
+    languages:
+    - Python
+    - Shell
